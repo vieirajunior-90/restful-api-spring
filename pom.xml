@@ -102,4 +102,8 @@
 
     </pluginRepositories>
 
+    <scm>
+        <url>https://github.com/vieirajunior-90/restful-api-spring</url>
+    </scm>
+
 </project>
