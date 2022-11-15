@@ -1,9 +1,11 @@
 package br.dev.paulovieira.restfulapispring.service.impl;
 
+import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.exception.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.repository.*;
 import br.dev.paulovieira.restfulapispring.service.*;
+import br.dev.paulovieira.restfulapispring.util.impl.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
@@ -14,10 +16,12 @@ import java.util.logging.*;
 public class PersonServiceImpl implements PersonService {
 
     Logger LOGGER = Logger.getLogger(PersonServiceImpl.class.getName());
-    final PersonRepository personRepository;
+    private final PersonRepository personRepository;
+    private final PersonMapperImpl mapper;
 
-    public PersonServiceImpl(PersonRepository personRepository) {
+    public PersonServiceImpl(PersonRepository personRepository, PersonMapperImpl mapper) {
         this.personRepository = personRepository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -37,24 +41,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional
     @Override
-    public Person save(Person person) {
+    public Person save(PersonDto personDto) {
         LOGGER.info("Save person");
-        return personRepository.save(person);
+        return personRepository.save(mapper.dtoToPerson(personDto));
     }
 
     @Transactional
     @Override
-    public Person update(Person person) {
+    public Person update(PersonDto personDto) {
         LOGGER.info("Update person");
-
-        // Check if person exists in database
-        var personToUpdate = findById(person.getId());
-        personToUpdate.setFirstName(person.getFirstName());
-        personToUpdate.setLastName(person.getLastName());
-        personToUpdate.setAddress(person.getAddress());
-        personToUpdate.setGender(person.getGender());
-
-        return personRepository.save(personToUpdate);
+        return personRepository.save(mapper.dtoToPerson(personDto));
     }
 
     @Transactional
