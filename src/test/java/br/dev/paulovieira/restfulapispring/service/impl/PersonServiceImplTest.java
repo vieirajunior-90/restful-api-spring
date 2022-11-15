@@ -1,16 +1,21 @@
 package br.dev.paulovieira.restfulapispring.service.impl;
 
+import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.exception.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
 import br.dev.paulovieira.restfulapispring.repository.*;
+import br.dev.paulovieira.restfulapispring.util.impl.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.data.domain.*;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;
 
@@ -20,7 +25,10 @@ class PersonServiceImplTest {
     PersonServiceImpl personService;
     @Mock
     PersonRepository personRepository;
+    @Mock
+    PersonMapperImpl mapper;
     Person person;
+    PersonDto personDto;
     Optional<Person> optionalPersonModel;
 
     @BeforeEach
@@ -78,8 +86,9 @@ class PersonServiceImplTest {
     @DisplayName("Save person")
     void shouldSaveAPerson() {
         when(personRepository.save(any(Person.class))).thenReturn(person);
+        when(mapper.dtoToPerson(any(PersonDto.class))).thenReturn(person);
 
-        var person = personService.save(this.person);
+        var person = personService.save(personDto);
 
         assertEquals(person.getClass(), Person.class);
         assertEquals(person, this.person);
@@ -93,10 +102,10 @@ class PersonServiceImplTest {
     @Test
     @DisplayName("Update person")
     void shouldUpdateAPerson() {
-        when(personRepository.findById(anyLong())).thenReturn(optionalPersonModel);
         when(personRepository.save(any(Person.class))).thenReturn(person);
+        when(mapper.dtoToPerson(any(PersonDto.class))).thenReturn(person);
 
-        var person = personService.update(this.person);
+        var person = personService.update(personDto);
 
         assertEquals(person.getClass(), Person.class);
         assertEquals(person, this.person);
@@ -120,6 +129,8 @@ class PersonServiceImplTest {
     private void startPerson() {
         person = PersonFactory.create(1L, "Paulo", "Vieira",
                 "Rua Spring Boot", "Male");
+        personDto = new PersonDto(
+                person.getId(), person.getFirstName(), person.getLastName(), person.getAddress(), person.getGender());
         optionalPersonModel = Optional.of(person);
     }
 }
