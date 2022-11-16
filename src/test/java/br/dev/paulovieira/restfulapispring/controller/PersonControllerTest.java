@@ -1,6 +1,7 @@
 package br.dev.paulovieira.restfulapispring.controller;
 
 import br.dev.paulovieira.restfulapispring.dto.*;
+import br.dev.paulovieira.restfulapispring.dto.factory.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
 import br.dev.paulovieira.restfulapispring.service.impl.*;
@@ -13,13 +14,13 @@ import org.springframework.http.*;
 import java.net.*;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;
 
 
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class PersonControllerTest {
 
     @InjectMocks
@@ -39,8 +40,8 @@ class PersonControllerTest {
 
     @Test
     @DisplayName("Find person by id")
-    void shouldReturnAPersonById() {
-        when(personService.findById(anyLong())).thenReturn(person);
+    void testFindById() {
+        when(personService.findById(anyLong())).thenReturn(personDto);
         when(mapper.personToDto(person)).thenReturn(personDto);
 
         var response = personController.findById(1L);
@@ -50,10 +51,10 @@ class PersonControllerTest {
     }
 
     @Test
-    @DisplayName("Find all persons")
-    void shouldReturnAllPersons() {
+    @DisplayName("Find all people")
+    void testFindAll() {
         var pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "id");
-        var page = new PageImpl<>(List.of(person));
+        var page = new PageImpl<>(List.of(personDto));
         when(personService.findAll(any(Pageable.class))).thenReturn(page);
         when(mapper.personToDto(person)).thenReturn(personDto);
 
@@ -61,16 +62,16 @@ class PersonControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().getContent().size());
-        assertEquals(personDto.firstName(), response.getBody().getContent().get(0).firstName());
-        assertEquals(personDto.lastName(), response.getBody().getContent().get(0).lastName());
-        assertEquals(personDto.address(), response.getBody().getContent().get(0).address());
-        assertEquals(personDto.gender(), response.getBody().getContent().get(0).gender());
+        assertEquals(personDto.getFirstName(), response.getBody().getContent().get(0).getFirstName());
+        assertEquals(personDto.getLastName(), response.getBody().getContent().get(0).getLastName());
+        assertEquals(personDto.getAddress(), response.getBody().getContent().get(0).getAddress());
+        assertEquals(personDto.getGender(), response.getBody().getContent().get(0).getGender());
     }
 
     @Test
     @DisplayName("Create a person")
-    void shouldCreateAPerson() throws URISyntaxException {
-        when(personService.save(personDto)).thenReturn(person);
+    void testSave() throws URISyntaxException {
+        when(personService.save(personDto)).thenReturn(personDto);
         when(mapper.personToDto(person)).thenReturn(personDto);
 
         var response = personController.save(personDto);
@@ -81,9 +82,9 @@ class PersonControllerTest {
 
     @Test
     @DisplayName("Update a person")
-    void shouldUpdateAPerson() {
-        when(personService.findById(anyLong())).thenReturn(person);
-        when(personService.update(any(PersonDto.class))).thenReturn(person);
+    void testUpdate() {
+        when(personService.findById(anyLong())).thenReturn(personDto);
+        when(personService.update(any(PersonDto.class))).thenReturn(personDto);
         when(mapper.personToDto(person)).thenReturn(personDto);
 
         var response = personController.update(1L, personDto);
@@ -93,7 +94,7 @@ class PersonControllerTest {
 
     @Test
     @DisplayName("Delete a person")
-    void shouldDeleteAPerson() {
+    void testDelete() {
         doNothing().when(personService).deleteById(anyLong());
 
         var response = personController.delete(1L);
@@ -105,7 +106,7 @@ class PersonControllerTest {
     private void startPerson() {
         person = PersonFactory.create(1L, "Paulo", "Vieira",
                 "Rua Spring Boot", "Male");
-        personDto = new PersonDto(person.getId(), person.getFirstName(),
+        personDto = PersonDtoFactory.create(person.getId(), person.getFirstName(),
                 person.getLastName(), person.getAddress(), person.getGender());
     }
 }
