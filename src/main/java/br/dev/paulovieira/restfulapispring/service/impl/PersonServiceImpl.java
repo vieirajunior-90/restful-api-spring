@@ -1,8 +1,8 @@
 package br.dev.paulovieira.restfulapispring.service.impl;
 
+import br.dev.paulovieira.restfulapispring.controller.*;
 import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.exception.*;
-import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.repository.*;
 import br.dev.paulovieira.restfulapispring.service.*;
 import br.dev.paulovieira.restfulapispring.util.impl.*;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
 import java.util.logging.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -25,32 +27,63 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findById(Long id) {
+    public PersonDto findById(Long id) {
         LOGGER.info("Find person by id: " + id);
-        return personRepository.findById(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Person not found with id: " + id)
-                );
+
+        var personDto = mapper.personToDto(personRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + id)));
+
+        personDto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+
+        return personDto;
     }
 
     @Override
-    public Page<Person> findAll(Pageable pageable) {
+    public Page<PersonDto> findAll(Pageable pageable) {
         LOGGER.info("Find all people");
-        return personRepository.findAll(pageable);
+
+        var people = personRepository.findAll(pageable);
+        var peopleDto = people.map(mapper::personToDto);
+
+        peopleDto.forEach(personDto -> personDto.add(linkTo(methodOn(PersonController.class)
+                .findById(personDto.getId()))
+                .withSelfRel()));
+
+        return peopleDto;
     }
 
     @Transactional
     @Override
-    public Person save(PersonDto personDto) {
+    public PersonDto save(PersonDto personDto) {
         LOGGER.info("Save person");
-        return personRepository.save(mapper.dtoToPerson(personDto));
+
+        isPersonNull(personDto);
+
+        var personDtoSaved = mapper.personToDto(personRepository.save(mapper.dtoToPerson(personDto)));
+        personDto.add(linkTo(methodOn(PersonController.class).findById(personDtoSaved.getId())).withSelfRel());
+
+        return personDtoSaved;
     }
 
     @Transactional
     @Override
-    public Person update(PersonDto personDto) {
+    public PersonDto update(PersonDto personDto) {
         LOGGER.info("Update person");
-        return personRepository.save(mapper.dtoToPerson(personDto));
+
+        isPersonNull(personDto);
+
+        var entity = personRepository.findById(personDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found with id: " + personDto.getId()));
+
+        entity.setFirstName(personDto.getFirstName());
+        entity.setLastName(personDto.getLastName());
+        entity.setAddress(personDto.getAddress());
+        entity.setGender(personDto.getGender());
+
+        var personDtoUpdated = mapper.personToDto(personRepository.save(entity));
+        personDtoUpdated.add(linkTo(methodOn(PersonController.class).findById(personDtoUpdated.getId())).withSelfRel());
+
+        return personDtoUpdated;
     }
 
     @Transactional
@@ -59,5 +92,11 @@ public class PersonServiceImpl implements PersonService {
         LOGGER.info("Delete person by id: " + id);
         findById(id);
         personRepository.deleteById(id);
+    }
+
+    private static void isPersonNull(PersonDto personDto) {
+        if (personDto == null) {
+            throw new RequiredObjectIsNullException("It cannot persist a null object");
+        }
     }
 }
