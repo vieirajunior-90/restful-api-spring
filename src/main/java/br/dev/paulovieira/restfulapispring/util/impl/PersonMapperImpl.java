@@ -1,6 +1,7 @@
 package br.dev.paulovieira.restfulapispring.util.impl;
 
 import br.dev.paulovieira.restfulapispring.dto.*;
+import br.dev.paulovieira.restfulapispring.dto.factory.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
 import br.dev.paulovieira.restfulapispring.util.*;
@@ -11,8 +12,7 @@ public class PersonMapperImpl implements PersonMapper {
 
     @Override
     public PersonDto personToDto(Person person) {
-
-        return new PersonDto(
+        return PersonDtoFactory.create(
                 person.getId(),
                 person.getFirstName(),
                 person.getLastName(),
@@ -30,11 +30,11 @@ public class PersonMapperImpl implements PersonMapper {
     public Person dtoToPerson(PersonDto personDto) {
 
         return PersonFactory.create(
-                personDto.id(),
-                personDto.firstName(),
-                personDto.lastName(),
-                personDto.address(),
-                personDto.gender()
+                personDto.getId(),
+                personDto.getFirstName(),
+                personDto.getLastName(),
+                personDto.getAddress(),
+                personDto.getGender()
         );
     }
 

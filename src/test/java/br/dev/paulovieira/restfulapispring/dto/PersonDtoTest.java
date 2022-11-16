@@ -1,5 +1,6 @@
 package br.dev.paulovieira.restfulapispring.dto;
 
+import br.dev.paulovieira.restfulapispring.dto.factory.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
 import br.dev.paulovieira.restfulapispring.util.impl.*;
@@ -31,19 +32,20 @@ class PersonDtoTest {
         var person = mapper.dtoToPerson(personDto);
 
         assertNotNull(person);
-        assertEquals(personDto.firstName(), person.getFirstName());
-        assertEquals(personDto.lastName(), person.getLastName());
-        assertEquals(personDto.address(), person.getAddress());
-        assertEquals(personDto.gender(), person.getGender());
+        assertEquals(personDto.getId(), person.getId());
+        assertEquals(personDto.getFirstName(), person.getFirstName());
+        assertEquals(personDto.getLastName(), person.getLastName());
+        assertEquals(personDto.getAddress(), person.getAddress());
+        assertEquals(personDto.getGender(), person.getGender());
     }
 
     @Test
     void shouldReturnAListOfPerson() {
-        var personsDto = getListOfPersonsDto();
-        var persons = mapper.dtoToPerson(personsDto);
+        var personsDto = getListOfPeopleDto();
+        var people = mapper.dtoToPerson(personsDto);
 
-        assertNotNull(persons);
-        assertEquals(personsDto.size(), persons.size());
+        assertNotNull(people);
+        assertEquals(personsDto.size(), people.size());
     }
 
     @Test
@@ -51,19 +53,20 @@ class PersonDtoTest {
         var personDto = mapper.personToDto(person);
 
         assertNotNull(personDto);
-        assertEquals(person.getFirstName(), personDto.firstName());
-        assertEquals(person.getLastName(), personDto.lastName());
-        assertEquals(person.getAddress(), personDto.address());
-        assertEquals(person.getGender(), personDto.gender());
+        assertEquals(person.getId(), personDto.getId());
+        assertEquals(person.getFirstName(), personDto.getFirstName());
+        assertEquals(person.getLastName(), personDto.getLastName());
+        assertEquals(person.getAddress(), personDto.getAddress());
+        assertEquals(person.getGender(), personDto.getGender());
     }
 
     @Test
     void shouldReturnAListOfPersonDto() {
-        var persons = getListOfPersons();
-        var personsDto = mapper.personToDto(persons);
+        var people = getListOfPeople();
+        var personsDto = mapper.personToDto(people);
 
         assertNotNull(personsDto);
-        assertEquals(persons.size(), personsDto.size());
+        assertEquals(people.size(), personsDto.size());
     }
 
     private void startPerson() {
@@ -76,7 +79,7 @@ class PersonDtoTest {
         );
     }
     private void startPersonDto() {
-        personDto = new PersonDto(
+        personDto = PersonDtoFactory.create(
                 1L,
                 "John",
                 "Doe",
@@ -85,19 +88,19 @@ class PersonDtoTest {
         );
     }
 
-    private List<Person> getListOfPersons() {
-        var persons = new ArrayList<Person>();
+    private List<Person> getListOfPeople() {
+        var people = new ArrayList<Person>();
 
-        persons.add(person);
+        people.add(person);
 
-        return persons;
+        return people;
     }
 
-    private List<PersonDto> getListOfPersonsDto() {
-        var persons = new ArrayList<PersonDto>();
+    private List<PersonDto> getListOfPeopleDto() {
+        var people = new ArrayList<PersonDto>();
 
-        persons.add(personDto);
+        people.add(personDto);
 
-        return persons;
+        return people;
     }
 }
