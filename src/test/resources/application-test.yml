@@ -2,9 +2,6 @@ spring:
 # MYSQL CONFIGURATION
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/SPRING_BOOT_RESTFULL_UDEMY?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
 
 # JPA CONFIGURATION
   jpa:
@@ -19,3 +16,7 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+# SERVER CONFIGURATION
+server:
+  port: 8090

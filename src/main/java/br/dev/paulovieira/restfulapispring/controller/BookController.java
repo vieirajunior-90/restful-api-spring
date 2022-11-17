@@ -14,53 +14,53 @@ import org.springframework.web.bind.annotation.*;
 import java.net.*;
 
 @RestController
-@Tag(name = "Person", description = "Endpoint for Person")
-@RequestMapping("/api/v1/people")
-public class PersonController {
+@Tag(name = "Book", description = "Endpoint for Book")
+@RequestMapping("/api/v1/books")
+public class BookController {
 
-    private final PersonServiceImpl personService;
+    private final BookServiceImpl bookService;
 
-    public PersonController(PersonServiceImpl personService) {
-        this.personService = personService;
+    public BookController(BookServiceImpl bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(
-            summary = "Find person by id",
-            description = "Find person by id and return a response entity with status code 200 and person object in body",
-            tags = {"Person"},
+            summary = "Find book by id",
+            description = "Find book by id and return a response entity with status code 200 and book object in body",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
-                            description = "Person found",
+                            description = "Book found",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = PersonDto.class)
+                                    schema = @Schema(implementation = BookDto.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Person not found", responseCode = "404"),
+                    @ApiResponse(description = "Book not found", responseCode = "404"),
                     @ApiResponse(description = "Internal server error", responseCode = "500")
             }
     )
     public ResponseEntity<Object> findById(
-            @PathVariable("id") @Parameter(description = "The id of the person to find") Long id) {
-        return ResponseEntity.ok(personService.findById(id));
+            @PathVariable("id") @Parameter(description = "The id of the book to find") Long id) {
+        return ResponseEntity.ok(bookService.findById(id));
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(
-            summary = "Find all people",
-            description = "Find all people and return a response entity with status code 200 and list of people in body",
-            tags = {"Person"},
+            summary = "Find all books",
+            description = "Find all books and return a response entity with status code 200 and list of books in body",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
                             description = "People found",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = PersonDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = BookDto.class))
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
@@ -69,85 +69,85 @@ public class PersonController {
                     @ApiResponse(description = "Internal server error", responseCode = "500")
             }
     )
-    public ResponseEntity<Page<PersonDto>> findAll(@PageableDefault(sort = "id",
+    public ResponseEntity<Page<BookDto>> findAll(@PageableDefault(sort = "id",
             direction = Sort.Direction.ASC) Pageable pageable) {
 
-        return ResponseEntity.ok(personService.findAll(pageable));
+        return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(
-            summary = "Create a new person",
-            description = "Create a new person and return a response entity with status code 201 and person object in body",
-            tags = {"Person"},
+            summary = "Create a new book",
+            description = "Create a new book and return a response entity with status code 201 and book object in body",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
-                            description = "Person created",
+                            description = "Book created",
                             responseCode = "201",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = PersonDto.class)
+                                    schema = @Schema(implementation = BookDto.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Person not created", responseCode = "404"),
+                    @ApiResponse(description = "Book not created", responseCode = "404"),
                     @ApiResponse(description = "Internal server error", responseCode = "500")
             }
     )
-    public ResponseEntity<PersonDto> save(@RequestBody PersonDto personDto) throws URISyntaxException {
-        var uri = new URI("/api/v1/people/" + personDto.getId());
-        return ResponseEntity.created(uri).body(personService.save(personDto));
+    public ResponseEntity<BookDto> save(@RequestBody BookDto bookDto) throws URISyntaxException {
+        var uri = new URI("/api/v1/books/" + bookDto.getId());
+        return ResponseEntity.created(uri).body(bookService.save(bookDto));
     }
 
     @PutMapping(value = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(
-            summary = "Update a person",
-            description = "Update a person and return a response entity with status code 200 and person object in body",
-            tags = {"Person"},
+            summary = "Update a book",
+            description = "Update a book and return a response entity with status code 200 and book object in body",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
-                            description = "Person updated",
+                            description = "Book updated",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = PersonDto.class)
+                                    schema = @Schema(implementation = BookDto.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Person not updated", responseCode = "404"),
+                    @ApiResponse(description = "Book not updated", responseCode = "404"),
                     @ApiResponse(description = "Internal server error", responseCode = "500")
             }
     )
-    public ResponseEntity<PersonDto> update(@PathVariable Long id, @RequestBody PersonDto personDto) {
-        personDto.setId(id);
-        return ResponseEntity.ok().body(personService.update(personDto));
+    public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        bookDto.setId(id);
+        return ResponseEntity.ok().body(bookService.update(bookDto));
     }
 
     @DeleteMapping(value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(
-            summary = "Delete a person",
-            description = "Delete a person and return a response entity with status code 204",
-            tags = {"Person"},
+            summary = "Delete a book",
+            description = "Delete a book and return a response entity with status code 204",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
-                            description = "Person deleted",
+                            description = "Book deleted",
                             responseCode = "204"
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Person not deleted", responseCode = "404"),
+                    @ApiResponse(description = "Book not deleted", responseCode = "404"),
                     @ApiResponse(description = "Internal server error", responseCode = "500")
             }
     )
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        personService.deleteById(id);
+        bookService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
