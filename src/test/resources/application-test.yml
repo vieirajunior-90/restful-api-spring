@@ -1,0 +1,22 @@
+spring:
+# MYSQL CONFIGURATION
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# JPA CONFIGURATION
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+
+# OPEN API CONFIGURATION
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+# SERVER CONFIGURATION
+server:
+  port: 8090
