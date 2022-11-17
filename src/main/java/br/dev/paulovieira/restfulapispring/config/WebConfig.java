@@ -5,7 +5,7 @@ import org.springframework.http.*;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
-@Profile("dev")
+@Profile({"dev", "test"})
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
