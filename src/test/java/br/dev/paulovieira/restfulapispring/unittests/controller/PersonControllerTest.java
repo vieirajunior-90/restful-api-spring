@@ -1,5 +1,6 @@
-package br.dev.paulovieira.restfulapispring.controller;
+package br.dev.paulovieira.restfulapispring.unittests.controller;
 
+import br.dev.paulovieira.restfulapispring.controller.*;
 import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.dto.factory.*;
 import br.dev.paulovieira.restfulapispring.model.*;

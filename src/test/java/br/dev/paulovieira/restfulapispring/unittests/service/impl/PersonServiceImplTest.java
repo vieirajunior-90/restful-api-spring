@@ -1,4 +1,4 @@
-package br.dev.paulovieira.restfulapispring.service.impl;
+package br.dev.paulovieira.restfulapispring.unittests.service.impl;
 
 import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.dto.factory.*;
@@ -6,6 +6,7 @@ import br.dev.paulovieira.restfulapispring.exception.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
 import br.dev.paulovieira.restfulapispring.repository.*;
+import br.dev.paulovieira.restfulapispring.service.impl.*;
 import br.dev.paulovieira.restfulapispring.util.impl.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;

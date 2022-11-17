@@ -1,5 +1,6 @@
-package br.dev.paulovieira.restfulapispring.dto;
+package br.dev.paulovieira.restfulapispring.unittests.dto;
 
+import br.dev.paulovieira.restfulapispring.dto.*;
 import br.dev.paulovieira.restfulapispring.dto.factory.*;
 import br.dev.paulovieira.restfulapispring.model.*;
 import br.dev.paulovieira.restfulapispring.model.factory.*;
