@@ -19,7 +19,7 @@ public class BookDto extends RepresentationModel<BookDto> implements Serializabl
     private Double price;
     private LocalDateTime launchDate;
 
-    
+
     public Long getId() {
         return id;
     }
