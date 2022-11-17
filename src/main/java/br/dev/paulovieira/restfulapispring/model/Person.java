@@ -2,16 +2,11 @@ package br.dev.paulovieira.restfulapispring.model;
 
 import jakarta.persistence.*;
 
-import java.io.*;
-
 @Entity
 @Table(name = "person", indexes = {
         @Index(name = "idx_person_id", columnList = "id")
 })
 public class Person {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
