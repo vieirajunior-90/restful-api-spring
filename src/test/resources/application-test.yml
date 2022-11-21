@@ -24,3 +24,10 @@ server:
 # CORS CONFIGURATION
 cors:
   originPatterns: http://localhost:4200,http://localhost:3000,http://localhost:8080
+
+# SECURITY CONFIGURATION
+security:
+  jwt:
+    token:
+      secret-key: 53cr3t
+      expiration-in-seconds: 3600000 # 1 hour default
